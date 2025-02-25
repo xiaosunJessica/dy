@@ -20,8 +20,8 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "paths": {
-      "src/*": ["src/*"]  // 设置 src 为路径别名
+     "paths": {
+      "@/*": ["src/*"] // @ 指向 src 目录
     }
   },
   "include": [
