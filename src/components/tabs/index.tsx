@@ -5,11 +5,13 @@ interface Props {
   // props types
  index: number,
  onChangeIndex: Dispatch<SetStateAction<number>>;
+ tabTexts: string[]
 }
 
 const Tabs: React.FC<Props> = ({
   index,
-  onChangeIndex
+  onChangeIndex,
+  tabTexts
 }) => {
   const tabsRef = useRef<HTMLDivElement>(null)
   const indicatorRef = useRef<HTMLDivElement>(null)
@@ -66,37 +68,18 @@ const Tabs: React.FC<Props> = ({
   return (
     <div className={styles["tab-ctn"]}>
       <div className={styles["tabs"]} ref={tabsRef}>
-        <div
-          className={`${styles['tab']} ${index === 0 ? styles['active'] : ''}`}
-          onClick={() => change(0)}
-        >
-          <span>热点</span>
-        </div>
-        <div
-          className={`${styles['tab']} ${index === 1 ? styles['active'] : ''}`}
-          onClick={() => change(1)}
-        >
-          <span>长视频</span>
-        </div>
-        <div
-          className={`${styles['tab']} ${index === 2 ? styles['active'] : ''}`}
-          onClick={() => change(2)}
-        >
-          <span>关注</span>
-          {/* <img src={liveIcon} alt="live" className="tab2-img" /> */}
-        </div>
-        <div
-          className={`${styles['tab']} ${index === 3 ? styles['active'] : ''}`}
-          onClick={() => change(3)}
-        >
-          <span>经验</span>
-        </div>
-        <div
-          className={`${styles['tab']} ${index === 4 ? styles['active'] : ''}`}
-          onClick={() => change(4)}
-        >
-          <span>推荐</span>
-        </div>
+        {
+          tabTexts.map((text, idx) => {
+            return (
+              <div
+                className={`${styles['tab']} ${index === idx ? styles['active'] : ''}`}
+                onClick={() => change(idx)}
+              >
+                <span>{text}</span>
+              </div>
+            )
+          })
+        }
       </div>
       <div className={styles["indicator"]} ref={indicatorRef}></div>
     </div>

@@ -22,7 +22,8 @@ const IndicatorHome: React.FC<Props> = ({
         />
         <Tabs
           index={index}
-          onChangeIndex={onChangeNavIndex} />
+          onChangeIndex={onChangeNavIndex}
+          tabTexts={['热点','长视频', '关注', '经验', '推荐']} />
         <Icon
           icon="ion:search"
           className="search"
