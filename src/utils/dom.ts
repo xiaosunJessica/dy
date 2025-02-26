@@ -141,49 +141,51 @@ export default class Dom {
 //   }
 // }
 
-// export function _css(el, key, value?) {
-//   const reg = /^-?\d+.?\d*(px|pt|em|rem|vw|vh|%|rpx|ms)$/i
-//   if (value === undefined) {
-//     let val = null
-//     if ('getComputedStyle' in window) {
-//       val = window.getComputedStyle(el, null)[key]
-//     } else {
-//       val = el.currentStyle[key]
-//     }
-//     return reg.test(val) ? parseFloat(val) : val
-//     // return parseFloat(val)
-//   } else {
-//     if (
-//       [
-//         'top',
-//         'left',
-//         'bottom',
-//         'right',
-//         'width',
-//         'height',
-//         'font-size',
-//         'margin',
-//         'padding'
-//       ].includes(key)
-//     ) {
-//       if (!reg.test(value)) {
-//         if (!String(value).includes('calc')) {
-//           value += 'px'
-//         }
-//       }
-//     }
-//     // console.log(value)
-//     if (key === 'transform') {
-//       //直接设置不生效
-//       el.style.webkitTransform =
-//         el.style.MsTransform =
-//         el.style.msTransform =
-//         el.style.MozTransform =
-//         el.style.OTransform =
-//         el.style.transform =
-//           value
-//     } else {
-//       el.style[key] = value
-//     }
-//   }
+}
+
+export function _css(el: Element, key: string, value?: string | undefined) {
+  const reg = /^-?\d+.?\d*(px|pt|em|rem|vw|vh|%|rpx|ms)$/i
+  if (value === undefined) {
+    let val = null
+    if ('getComputedStyle' in window) {
+      val = window.getComputedStyle(el, null).getPropertyValue(key)
+    } else {
+      val = (el as any).currentStyle[key]
+    }
+    return reg.test(val) ? parseFloat(val) : val
+    // return parseFloat(val)
+  } else {
+    if (
+      [
+        'top',
+        'left',
+        'bottom',
+        'right',
+        'width',
+        'height',
+        'font-size',
+        'margin',
+        'padding'
+      ].includes(key)
+    ) {
+      if (!reg.test(value)) {
+        if (!String(value).includes('calc')) {
+          value += 'px'
+        }
+      }
+    }
+    // console.log(value)
+    if (key === 'transform') {
+      //直接设置不生效
+      (el as any).style.webkitTransform =
+        (el as any).style.MsTransform =
+        (el as any).style.msTransform =
+        (el as any).style.MozTransform =
+        (el as any).style.OTransform =
+        (el as any).style.transform =
+          value
+    } else {
+      (el as any).style[key] = value
+    }
+  }
 }
