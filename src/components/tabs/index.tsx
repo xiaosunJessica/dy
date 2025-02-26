@@ -72,6 +72,7 @@ const Tabs: React.FC<Props> = ({
           tabTexts.map((text, idx) => {
             return (
               <div
+                key={text}
                 className={`${styles['tab']} ${index === idx ? styles['active'] : ''}`}
                 onClick={() => change(idx)}
               >

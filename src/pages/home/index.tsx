@@ -13,9 +13,16 @@ const ComponentName: React.FC<Props> = ({}) => {
     <div className={styles['test-slide-wrapper']} id="home-index">
       <SlideHorizontal>
         <SlideItem>
+          {/* tabs 导航 */}
           <IndicatorHome
             index={navIndex}
             onChangeNavIndex={setNavIndex} />
+          {/* tabs导航的内容，根据navIndex展示对应的内容，采用SlideHorizontal支持滑动切换tabs */}
+          <SlideHorizontal>
+            <SlideItem>1</SlideItem>
+            <SlideItem>2</SlideItem>
+            <SlideItem>3</SlideItem>
+          </SlideHorizontal>
         </SlideItem>
       </SlideHorizontal>
     </div>

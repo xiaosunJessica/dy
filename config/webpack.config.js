@@ -557,9 +557,6 @@ module.exports = function (webpackEnv) {
                   sourceMap: isEnvProduction
                     ? shouldUseSourceMap
                     : isEnvDevelopment,
-                  modules: {
-                    localIdentName: "[local]_[hash:base64:5]", // 设置生成的类名
-                  },
                 },
                 "less-loader"
               ),
