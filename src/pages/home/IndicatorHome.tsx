@@ -5,12 +5,14 @@ import Tabs from '@/components/tabs'
 interface Props {
   // props types
  index: number,
+ name?: string,
  onChangeNavIndex: Dispatch<SetStateAction<number>>;
 }
 
 const IndicatorHome: React.FC<Props> = ({
   index,
-  onChangeNavIndex
+  onChangeNavIndex,
+  name
 }) => {
   return (
     <div className={styles['indicator-home']}>
@@ -23,6 +25,7 @@ const IndicatorHome: React.FC<Props> = ({
         <Tabs
           index={index}
           onChangeIndex={onChangeNavIndex}
+          name={name}
           tabTexts={['热点','长视频', '关注', '经验', '推荐']} />
         <Icon
           icon="ion:search"

@@ -8,20 +8,34 @@ interface Props {
 }
 
 const ComponentName: React.FC<Props> = ({}) => {
-  const [navIndex, setNavIndex] = useState<number>(4);
+  const [navIndex, setNavIndex] = useState<number>(0);
+  const onChange = (val: number) => {
+    console.log(val, '0000')
+    setNavIndex(val)
+  }
   return (
     <div className={styles['test-slide-wrapper']} id="home-index">
-      <SlideHorizontal>
+      <SlideHorizontal
+        name="first"
+        onChangeIndex={() => {}}
+        index={0}>
         <SlideItem>
           {/* tabs 导航 */}
           <IndicatorHome
             index={navIndex}
+            name="second"
             onChangeNavIndex={setNavIndex} />
           {/* tabs导航的内容，根据navIndex展示对应的内容，采用SlideHorizontal支持滑动切换tabs */}
-          <SlideHorizontal>
+          <SlideHorizontal
+            name="second"
+            index={navIndex}
+            cls={styles['first-horizontal-item']}
+            onChangeIndex={onChange}>
+            <SlideItem>0</SlideItem>
             <SlideItem>1</SlideItem>
             <SlideItem>2</SlideItem>
             <SlideItem>3</SlideItem>
+            <SlideItem>4</SlideItem>
           </SlideHorizontal>
         </SlideItem>
       </SlideHorizontal>

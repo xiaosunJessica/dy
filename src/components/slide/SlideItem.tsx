@@ -1,5 +1,5 @@
 import React, {ReactNode} from 'react';
-import './SlideHorizontal.module.less'
+import styles from  './SlideHorizontal.module.less'
 interface Props {
   // props types
   children: ReactNode
@@ -7,7 +7,7 @@ interface Props {
 
 const SlideItem: React.FC<Props> = ({children}) => {
   return (
-    <div className='slide-item'>
+    <div className={styles['slide-item']}>
       {children}
     </div>
   );

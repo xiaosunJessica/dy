@@ -21,11 +21,11 @@
 //   return defaultValue
 // }
 
-// export function _stopPropagation(e: Event) {
-//   e.stopImmediatePropagation()
-//   e.stopPropagation()
-//   e.preventDefault()
-// }
+export function _stopPropagation(e: any) {
+  e.stopImmediatePropagation()
+  e.stopPropagation()
+  e.preventDefault()
+}
 
 // export function _stop(e: Event) {
 //   e.stopPropagation()

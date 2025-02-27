@@ -1,164 +1,90 @@
-
-// import React, { useEffect, useState, useRef, useCallback } from 'react';
-// import { getSlideOffset, slideInit, slideReset, slideTouchEnd, slideTouchMove, slideTouchStart } from '@/utils/slide';
-// import { SlideType } from '@/utils/const_var';
-// import { _css } from '@/utils/dom';
-
-// interface SliderProps {
-//   index: number;
-//   name: string;
-//   autoplay: boolean;
-//   indicator: boolean;
-//   changeActiveIndexUseAnim: boolean;
-//   onUpdateIndex: (index: number) => void;
-// }
-
-// const SlideHorizontal: React.FC<SliderProps> = ({
-//   index,
-//   name,
-//   autoplay,
-//   indicator,
-//   changeActiveIndexUseAnim,
-//   onUpdateIndex,
-// }) => {
-//   const slideListEl = useRef<HTMLDivElement | null>(null);
-//   const [state, setState] = useState({
-//     judgeValue: 20,
-//     type: SlideType.HORIZONTAL,
-//     name,
-//     localIndex: index,
-//     needCheck: true,
-//     next: false,
-//     isDown: false,
-//     start: { x: 0, y: 0, time: 0 },
-//     move: { x: 0, y: 0 },
-//     wrapper: {
-//       width: 0,
-//       height: 0,
-//       childrenLength: 0,
-//     },
-//   });
-
-//   const updateIndex = useCallback(
-//     (newVal: number) => {
-//       if (state.localIndex !== newVal) {
-//         setState((prevState) => ({
-//           ...prevState,
-//           localIndex: newVal,
-//         }));
-
-//         if (changeActiveIndexUseAnim && slideListEl.current) {
-//           _css(slideListEl.current, 'transition-duration', '300ms');
-//         }
-
-//         if (slideListEl.current) {
-//           _css(
-//             slideListEl.current,
-//             'transform',
-//             `translate3d(${getSlideOffset(state, slideListEl.current)}px, 0, 0)`
-//           );
-//         }
-//       }
-//     },
-//     [state.localIndex, state, changeActiveIndexUseAnim]
-//   );
-
-//   useEffect(() => {
-//     // Initialize the slide when the component is mounted
-//     if (slideListEl.current) {
-//       slideInit(slideListEl.current, state);
-//     }
-
-//     if (autoplay) {
-//       const interval = setInterval(() => {
-//         if (state.localIndex === state.wrapper.childrenLength - 1) {
-//           onUpdateIndex(0);
-//         } else {
-//           onUpdateIndex(state.localIndex + 1);
-//         }
-//       }, 3000);
-
-//       return () => clearInterval(interval);
-//     }
-
-//     // Observe the child elements' count
-//     const observer = new MutationObserver(() => {
-//       if (slideListEl.current) {
-//         setState((prevState) => ({
-//           ...prevState,
-//           wrapper: {
-//             ...prevState.wrapper,
-//             childrenLength: slideListEl.current.children.length,
-//           },
-//         }));
-//       }
-//     });
-
-//     if (slideListEl.current) {
-//       observer.observe(slideListEl.current, { childList: true });
-//     }
-
-//     return () => observer.disconnect();
-//   }, [state, autoplay, onUpdateIndex]);
-
-//   useEffect(() => {
-//     updateIndex(index);
-//   }, [index, updateIndex]);
-
-//   const touchStart = (e: React.PointerEvent) => {
-//     slideTouchStart(e, slideListEl.current, state);
-//   };
-
-//   const touchMove = (e: React.PointerEvent) => {
-//     slideTouchMove(e, slideListEl.current, state);
-//   };
-
-//   const touchEnd = (e: React.PointerEvent) => {
-//     slideTouchEnd(e, state);
-//     slideReset(e, slideListEl.current, state, onUpdateIndex);
-//   };
-
-//   return (
-//     <div className="slide horizontal">
-//       {/* Indicator bullets */}
-//       {indicator && state.wrapper.childrenLength > 0 && (
-//         <div className="indicator-bullets">
-//           {Array.from({ length: state.wrapper.childrenLength }).map((_, i) => (
-//             <div
-//               className={`bullet ${state.localIndex === i ? 'active' : ''}`}
-//               key={i}
-//             ></div>
-//           ))}
-//         </div>
-//       )}
-
-//       {/* Slide list */}
-//       <div
-//         className="slide-list"
-//         ref={slideListEl}
-//         onPointerDown={touchStart}
-//         onPointerMove={touchMove}
-//         onPointerUp={touchEnd}
-//       >
-//         {{children}} {/* This should be replaced by actual children */}
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default SlideHorizontal
-
-import React, { ReactNode} from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
+import { SlideType } from '@/utils/const_var'; // Assuming SlideType is already imported
+import { slideReset, slideTouchEnd, slideTouchMove, slideTouchStart, slideInit } from '@/utils/slide'
 
 interface Props {
-  // props types
-  children?: ReactNode
+  children?: React.ReactNode;
+  cls?: string;
+  name: string;
+  index: number;
+  onChangeIndex: (React.Dispatch<React.SetStateAction<number>>) | any;
 }
 
-const SlideHorizontal: React.FC<Props> = ({children}) => {
+const SlideHorizontal: React.FC<Props> = (props) => {
+  const slideListEl: React.RefObject<HTMLDivElement|null> = useRef<HTMLDivElement>(null);
+
+  const [state, setState] = useState({
+    judgeValue: 20, // Threshold for detecting slide direction
+    type: SlideType.HORIZONTAL,
+    name: props.name,
+    localIndex: props.index,
+    needCheck: true, // Flag to check on each down event
+    next: false, // Flag to check if slide is allowed
+    isDown: false, // Flag for the touch start
+    start: { x: 0, y: 0, time: 0 }, // Starting coordinates for touch
+    move: { x: 0, y: 0 }, // Coordinates for move event
+    wrapper: {
+      width: 0,
+      height: 0,
+      childrenLength: 0, // Number of child elements for slide container
+    },
+  });
+
+  const handlePointerDown = useCallback((e: any) => {
+    slideTouchStart(e, slideListEl.current, setState)
+  }, [slideListEl])
+
+  const handlePointerMove = useCallback((e: any) => {
+    slideTouchMove(e, slideListEl.current, state, setState)
+  }, [state, slideListEl])
+
+  const handlePointerUp = useCallback((e: any) => {
+    slideTouchEnd(e, state,setState, null)
+    slideReset(e, slideListEl.current, state, setState, props.onChangeIndex)
+  }, [state, slideListEl, props.onChangeIndex])
+
+  useEffect(() => {
+    const slideListElement = slideListEl.current;
+
+    const touchStartListener = (e: any) => {
+      e.preventDefault();
+      handlePointerDown(e);
+    };
+    const touchMoveListener = (e: any) => {
+      e.preventDefault();
+      handlePointerMove(e)
+    };
+    const touchEndListener = (e: any) => {
+      e.preventDefault();
+      handlePointerUp(e)
+    };
+    if (slideListElement) {
+      // Add non-passive event listeners
+      slideListElement.addEventListener('touchstart', touchStartListener, { passive: false });
+      slideListElement.addEventListener('touchmove', touchMoveListener, { passive: false });
+      slideListElement.addEventListener('touchend', touchEndListener, { passive: false });
+
+      // Cleanup event listeners when component unmounts
+      return () => {
+        slideListElement.removeEventListener('touchstart', touchStartListener);
+        slideListElement.removeEventListener('touchmove', touchMoveListener);
+        slideListElement.removeEventListener('touchend', touchEndListener);
+      };
+    }
+  }, [handlePointerDown, handlePointerMove, handlePointerUp]);
+
+  useEffect(() => {
+    slideInit(slideListEl.current, state, setState)
+  }, [])
+
   return (
-    <div className="slide horizontal">
-      {children}
+    <div className={`slide horizontal ${props.cls || ''}`}>
+      <div
+        className="slide-list"
+        ref={slideListEl}
+      >
+        {props.children}
+      </div>
     </div>
   );
 };
