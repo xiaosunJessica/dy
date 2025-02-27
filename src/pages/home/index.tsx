@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SlideHorizontal from '@/components/slide/SlideHorizontal';
 import SlideItem from '@/components/slide/SlideItem';
+import Slide4 from '@/components/slide/Slide4';
 import IndicatorHome from './IndicatorHome';
 import styles from './index.module.less'
 interface Props {
@@ -31,11 +32,11 @@ const ComponentName: React.FC<Props> = ({}) => {
             index={navIndex}
             cls={styles['first-horizontal-item']}
             onChangeIndex={onChange}>
-            <SlideItem>0</SlideItem>
+            <Slide4>0</Slide4>
             <SlideItem>1</SlideItem>
             <SlideItem>2</SlideItem>
             <SlideItem>3</SlideItem>
-            <SlideItem>4</SlideItem>
+            <Slide4>4</Slide4>
           </SlideHorizontal>
         </SlideItem>
       </SlideHorizontal>
