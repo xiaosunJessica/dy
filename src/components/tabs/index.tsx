@@ -67,7 +67,7 @@ const Tabs: React.FC<Props> = ({
       _css(
         indicatorRef.current,
         'left',
-        lefts[index] + 'px'
+        lefts[index] - e / (document.body.clientWidth / indicatorSpace) +'px'
       )
     }
   }, [index, lefts])

@@ -47,15 +47,15 @@ const SlideHorizontal: React.FC<Props> = (props) => {
     const slideListElement = slideListEl.current;
 
     const touchStartListener = (e: any) => {
-      e.preventDefault();
+      // e.preventDefault();
       handlePointerDown(e);
     };
     const touchMoveListener = (e: any) => {
-      e.preventDefault();
+      // e.preventDefault();
       handlePointerMove(e)
     };
     const touchEndListener = (e: any) => {
-      e.preventDefault();
+      // e.preventDefault();
       handlePointerUp(e)
     };
     if (slideListElement) {
