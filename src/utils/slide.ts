@@ -21,7 +21,6 @@ function checkEvent(e: any) {
 
 
 export function slideInit(el: any,state: any, updateState: (arg0: (prevState: any) => any) => void) {
-  console.log(el.children.length, 'el.children.length')
   updateState((prevState: any) => ({
     ...prevState,
     wrapper: {

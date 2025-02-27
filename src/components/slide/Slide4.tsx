@@ -9,6 +9,7 @@ const Slide4: React.FC<Props> = ({}) => {
   return (
     <SlideList
       active={true}
+      uniqueId='home'
       api={recommendedVideo} />
   );
 };

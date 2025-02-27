@@ -3,11 +3,11 @@
 // import SimpleConfirmDialog from '../components/dialog/SimpleConfirmDialog.vue'
 // import ConfirmDialog from '../components/dialog/ConfirmDialog.vue'
 // import Loading from '../components/Loading.vue'
-// import { IMG_URL, IS_DEV, IS_GITEE_PAGES } from '@/config'
+import { IMG_URL } from '@/config'
 // import NoticeDialog from '../components/dialog/NoticeDialog.vue'
 // import { ArchiveReader, libarchiveWasm } from 'libarchive-wasm'
 // import SlideUser from '@/components/slide/SlideUser.vue'
-// import BaseVideo from '@/components/slide/BaseVideo.vue'
+import BaseVideo from '@/components/slide/BaseVideo'
 
 // export function _storageSet(key, value) {
 //   localStorage.setItem(key, JSON.stringify(value))
@@ -119,21 +119,21 @@ export function _stopPropagation(e: any) {
 //   return str
 // }
 
-// export function _checkImgUrl(url) {
-//   // console.log(url)
-//   if (!url) return
-//   //本地图片
-//   if (
-//     url.includes('assets/img') ||
-//     url.includes('file://') ||
-//     url.includes('data:image') ||
-//     url.includes('http') ||
-//     url.includes('https')
-//   ) {
-//     return url
-//   }
-//   return IMG_URL + url
-// }
+export function _checkImgUrl(url: string) {
+  // console.log(url)
+  if (!url) return
+  //本地图片
+  if (
+    url.includes('assets/img') ||
+    url.includes('file://') ||
+    url.includes('data:image') ||
+    url.includes('http') ||
+    url.includes('https')
+  ) {
+    return url
+  }
+  return IMG_URL + url
+}
 
 // export function _duration(v) {
 //   if (!v) return '00:00'
@@ -406,37 +406,36 @@ export function _notice(val: string) {
 //   }
 // }
 
-// export function slideItemRender(props) {
-//   return function render(item, index, play, uniqueId) {
-//     // console.log('item', item)
-//     let node
-//     switch (item.type) {
-//       case 'img':
-//         node = <img src={item.src} style="height:100%;" alt={''} />
-//         break
-//       // case 'imgs':
-//       //   node = <SlideAlbum isPlay={play} index={index} position={{ uniqueId, index }} {...props} />
-//       //   break
-//       case 'user':
-//         node = <SlideUser {...props} />
-//         break
-//       case 'send-video':
-//         node = <video src={item.src} style="height:100%;" />
-//         break
-//       default:
-//         node = (
-//           <BaseVideo
-//             isPlay={play}
-//             item={item}
-//             index={index}
-//             position={{ uniqueId, index }}
-//             {...props}
-//           />
-//         )
-//         break
-//     }
-//     return node
-//   }
-// }
+export function slideItemRender(props: any) {
+  return function render(item: { type: any; src: string | undefined }, index: any, play: any, uniqueId: any) {
+    // console.log('item', item)
+    let node
+    switch (item.type) {
+      case 'img':
+        node = <img src={item.src} style={{ height: '100%' }} alt={''} />
+        break
+      // case 'imgs':
+      //   node = <SlideAlbum isPlay={play} index={index} position={{ uniqueId, index }} {...props} />
+      //   break
+      case 'user':
+        // node = <SlideUser {...props} />
+        break
+      case 'send-video':
+        node = <video src={item.src} style={{ height: '100%' }} />
+        break
+      default:
+        node = (
+          <BaseVideo
+            isPlay={play}
+            item={item}
+            index={index}
+            position={{ uniqueId, index }}
+            {...props}
+          />
+        )
+        break
+    }
+    return node
+  }
+}
 
-export default {}

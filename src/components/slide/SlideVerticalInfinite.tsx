@@ -1,8 +1,11 @@
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { SlideType } from '@/utils/const_var';
+import SlideItem from './SlideItem';
 import { slideInit, getSlideOffset } from '@/utils/slide'
 import { _css } from '@/utils/dom';
 import bus, { EVENT_KEY } from '@/utils/bus'
+import ReactDOM from 'react-dom/client';
+
 interface Props {
   // props types
   children?: ReactNode,
@@ -12,12 +15,18 @@ interface Props {
   virtualTotal: number,
   onLoadMore: () => void
   onRefresh: () => void,
-  active: Boolean
+  active: Boolean,
+  uniqueId: string
+  render: (item: any, index: number, play: boolean, uniqueId: string) => any
 }
 const itemClassName = 'slide-item'
 
+// 示例使用
+const appInsMap = new Map();
+
 const SlideVerticalInfinite: React.FC<Props> = (props) => {
   const slideListEl: React.RefObject<HTMLDivElement|null> = useRef(null)
+
   const oldList = useRef([])
 
 
@@ -47,7 +56,37 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
   }
 
   const getInsEl = (item: any, index: number, play =false) => {
+    let slideVNode = props.render(item, index, play, props.uniqueId)
+    const parent = document.createElement('div')
 
+    if (process.env.NODE_ENV === 'production') {
+
+    } else {
+      const App = () => <SlideItem data-index={index}>{slideVNode}</SlideItem>
+      // 使用 createRoot 渲染组件
+      const root = ReactDOM.createRoot(parent);
+      root.render(<App />);
+
+      // 将卸载函数存入 appInsMap
+      appInsMap.set(index, {
+        unmount: () => {
+          root.unmount(); // 卸载组件
+        }
+      });
+
+      return new Promise<HTMLElement>((resolve) => {
+        const checkAndResolve = () => {
+          if (parent.firstChild) {
+            resolve(parent.firstChild as HTMLElement);  // 返回真实 DOM
+          } else {
+            setTimeout(checkAndResolve, 50);  // 每50毫秒检查一次，直到 DOM 渲染完成
+          }
+        };
+        checkAndResolve();
+      });
+      // console.log(parent.firstChild, 'parentparentparent', parent)
+      // return parent.firstChild as HTMLElement;
+    }
   }
 
   // 插入SlideItem
@@ -75,8 +114,9 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
       if (start < 0) start = 0
 
       // 插入start到end范围内的数据到dom中
-      props.list.slice(start, end).map((item, index) => {
-        let el: any = getInsEl(item, start + index, start + index === state.localIndex)
+      props.list.slice(start, end).map(async (item, index) => {
+        let el: any = await getInsEl(item, start + index, start + index === state.localIndex)
+        console.log(el,' 0099elkkkk')
         slideListEl.current?.appendChild(el)
       })
 
