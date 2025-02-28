@@ -26,17 +26,14 @@ const ComponentName: React.FC<Props> = ({}) => {
             index={navIndex}
             name="second"
             onChangeNavIndex={setNavIndex} />
+
           {/* tabs导航的内容，根据navIndex展示对应的内容，采用SlideHorizontal支持滑动切换tabs */}
           <SlideHorizontal
             name="second"
             index={navIndex}
             cls={styles['first-horizontal-item']}
             onChangeIndex={onChange}>
-            <Slide4>0</Slide4>
-            <SlideItem>1</SlideItem>
-            <SlideItem>2</SlideItem>
-            <SlideItem>3</SlideItem>
-            <Slide4>4</Slide4>
+            <Slide4></Slide4>
           </SlideHorizontal>
         </SlideItem>
       </SlideHorizontal>

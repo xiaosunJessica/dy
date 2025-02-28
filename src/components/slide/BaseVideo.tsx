@@ -14,7 +14,7 @@ const BaseVideo: React.FC<Props> = (props) => {
     isMuted: (window as any).isMuted
   })
   return (
-    <div className={styles['video-wrapper']}>
+    <div className={styles['video-wrapper']} onClick={() => {console.log('test11111')}}>
       <video
         poster={poster}
         ref={videoEl}
@@ -22,9 +22,9 @@ const BaseVideo: React.FC<Props> = (props) => {
         preload="true"
         loop
         x5-video-player-type="h5-page"
-        x5-video-player-fullscreen={false}
-        webkit-playsinline={true}
-        x5-playsinline={true}
+        x5-video-player-fullscreen="false"
+        webkit-playsinline="true"
+        x5-playsinline="true"
         playsInline={true}
         autoPlay={props.isPlay}
       >

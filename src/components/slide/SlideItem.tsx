@@ -7,7 +7,7 @@ interface Props {
 
 const SlideItem: React.FC<Props> = ({children}) => {
   return (
-    <div className={styles['slide-item']}>
+    <div className={styles['slide-item']} onClick={() => console.log('item')}>
       {children}
     </div>
   );

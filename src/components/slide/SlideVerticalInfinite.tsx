@@ -116,7 +116,6 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
       // 插入start到end范围内的数据到dom中
       props.list.slice(start, end).map(async (item, index) => {
         let el: any = await getInsEl(item, start + index, start + index === state.localIndex)
-        console.log(el,' 0099elkkkk')
         slideListEl.current?.appendChild(el)
       })
 
@@ -175,7 +174,7 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
   }, [])
 
   return (
-    <div className='slide slide-infinite'>
+    <div className='slide slide-infinite' onClick={() => {console.log('---infinite')}}>
       <div
         className="slide-list flex-direction-column"
         ref={slideListEl}

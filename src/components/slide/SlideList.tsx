@@ -18,7 +18,7 @@ const SlideList: React.FC<Props> = (props) => {
   }>({
     list: [],
     totalSize: 0,
-    pageSize: 10,
+    pageSize: 1,
     index: 0,
   })
 
