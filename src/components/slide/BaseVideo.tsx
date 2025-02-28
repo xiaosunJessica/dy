@@ -18,15 +18,15 @@ const BaseVideo: React.FC<Props> = (props) => {
       <video
         poster={poster}
         ref={videoEl}
-        muted={state.isMuted}
+        muted={state.isMuted??true}
         preload="true"
         loop
         x5-video-player-type="h5-page"
         x5-video-player-fullscreen="false"
         webkit-playsinline="true"
         x5-playsinline="true"
-        playsInline={true}
-        autoPlay={props.isPlay}
+        playsInline
+        autoPlay={props.isPlay??true}
       >
         {
           props?.item?.video?.play_addr?.url_list.map((urlItem: any, index: number) => {
