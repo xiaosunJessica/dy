@@ -1,7 +1,7 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { SlideType } from '@/utils/const_var';
 import SlideItem from './SlideItem';
-import { slideInit, getSlideOffset } from '@/utils/slide'
+import { slideInit, getSlideOffset, slideTouchStart, slideTouchMove, slideTouchEnd, slideReset} from '@/utils/slide'
 import { _css } from '@/utils/dom';
 import bus, { EVENT_KEY } from '@/utils/bus'
 import ReactDOM from 'react-dom/client';
@@ -43,17 +43,29 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
     wrapper: { width: 0, height: 0, childrenLength: 0 }
   })
 
-  const touchStart = () => {
+
+  const onChangeNext = () => {
 
   }
+  const handlePointerDown = useCallback((e: any) => {
+    slideTouchStart(e, slideListEl.current, setState)
+  }, [slideListEl])
 
-  const touchMove = () => {
+  const handlePointerMove = useCallback((e: any) => {
+    slideTouchMove(e, slideListEl.current, state, setState)
+  }, [state, slideListEl])
 
-  }
+  const handlePointerUp = useCallback((e: any) => {
+    // let isNext = state.move.y < 0
+    // if (state.localIndex ===0 && !isNext && state.move.y > )
+    slideTouchEnd({
+      e,
+      state,
+      updateState:setState,
+    })
+    slideReset(e, slideListEl.current, state, setState, onChangeNext)
+  }, [state, slideListEl, onChangeNext])
 
-  const touchEnd = () => {
-
-  }
 
   const getInsEl = (item: any, index: number, play =false) => {
     let slideVNode = props.render(item, index, play, props.uniqueId)
@@ -173,14 +185,43 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
     slideInit(slideListEl.current, state, setState)
   }, [])
 
+  // 绑定事件
+   useEffect(() => {
+      const slideListElement = slideListEl.current;
+
+      const touchStartListener = (e: any) => {
+        // e.preventDefault();
+        handlePointerDown(e);
+      };
+      const touchMoveListener = (e: any) => {
+        // e.preventDefault();
+        handlePointerMove(e)
+      };
+      const touchEndListener = (e: any) => {
+        // e.preventDefault();
+        handlePointerUp(e)
+      };
+      if (slideListElement) {
+        // Add non-passive event listeners
+        slideListElement.addEventListener('touchstart', touchStartListener, { passive: false });
+        slideListElement.addEventListener('touchmove', touchMoveListener, { passive: false });
+        slideListElement.addEventListener('touchend', touchEndListener, { passive: false });
+
+        // Cleanup event listeners when component unmounts
+        return () => {
+          slideListElement.removeEventListener('touchstart', touchStartListener);
+          slideListElement.removeEventListener('touchmove', touchMoveListener);
+          slideListElement.removeEventListener('touchend', touchEndListener);
+        };
+      }
+    }, [handlePointerDown, handlePointerMove, handlePointerUp]);
+
+
   return (
     <div className='slide slide-infinite' onClick={() => {console.log('---infinite')}}>
       <div
         className="slide-list flex-direction-column"
         ref={slideListEl}
-        onTouchStart={touchStart}
-        onTouchMove={touchMove}
-        onTouchEnd={touchEnd}
       >
         {props.children}
       </div>

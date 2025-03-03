@@ -49,6 +49,7 @@ export const canSlide = (state: any, updateState: any): boolean => {
     if (Math.abs(state.move.x) > state.judgeValue || Math.abs(state.move.y) > state.judgeValue) {
       const angle = (Math.abs(state.move.x) * 10) / (Math.abs(state.move.y) * 10);
       const next = state.type === SlideType.HORIZONTAL ? angle > 1 : angle <= 1;
+      console.log(next, 'nextnext')
       updateState((prevState: any) => ({
         ...prevState,
         next,
@@ -176,11 +177,21 @@ export function slideTouchMove(e: any, el: any, state: any, updateState: (arg0: 
  * @param {(((arg0: any, arg1: boolean) => any) | null)} canNextCb
 * */
 
-export function slideTouchEnd(e: any, state: any, updateState: any, canNextCb: ((arg0: any, arg1: boolean) => any) | null)  {
+export function slideTouchEnd({
+ e,
+ state,
+ updateState,
+ canNextCb,
+ nextCb,
+ notNextCb
+}: {
+   e: any, state: any, updateState: any, canNextCb?: any, nextCb?: any, notNextCb?: any
+})  {
   if (!checkEvent(e)) return
   if (!state.isDown) return
-
+  console.log(state, '0000state0000')
   if (state.next) {
+    debugger
     const isHorizontal = state.type === SlideType.HORIZONTAL
     const isNext = isHorizontal ? state.move.x < 0 : state.move.y < 0
 
@@ -201,6 +212,8 @@ export function slideTouchEnd(e: any, state: any, updateState: any, canNextCb: (
       if (Math.abs(distance) > judgeValue / 3) gapTime = 100
       //3、若不在上述两种情况，那么只需要判断时间即可
       if (gapTime < 150) {
+        debugger
+        console.log('000000150')
         if (isNext) {
           updateState((prevState: any) => ({
             ...prevState,
@@ -212,10 +225,12 @@ export function slideTouchEnd(e: any, state: any, updateState: any, canNextCb: (
             localIndex: prevState.localIndex - 1
           }))
         }
-        // return nextCb?.(isNext)
+        return nextCb?.(isNext)
       }
     }
 
+  } else {
+    notNextCb?.()
   }
 }
 
@@ -254,7 +269,7 @@ export function slideReset(e: any, el: any, state: any, updateState: any, update
     isMoved: false
   }))
 
-  console.log(state.localIndex, 'state.localIndexstate.localIndex')
+  console.log(state.localIndex, 'state.localIndex')
   updateIndex(state.localIndex)
 }
 

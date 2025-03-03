@@ -11,7 +11,7 @@ interface Props {
 const ComponentName: React.FC<Props> = ({}) => {
   const [navIndex, setNavIndex] = useState<number>(0);
   const onChange = (val: number) => {
-    console.log(val, '0000')
+    console.log(val, '00000')
     setNavIndex(val)
   }
   return (
@@ -34,6 +34,9 @@ const ComponentName: React.FC<Props> = ({}) => {
             cls={styles['first-horizontal-item']}
             onChangeIndex={onChange}>
             <Slide4></Slide4>
+            <SlideItem>2</SlideItem>
+            <SlideItem>3</SlideItem>
+            <SlideItem>4</SlideItem>
           </SlideHorizontal>
         </SlideItem>
       </SlideHorizontal>

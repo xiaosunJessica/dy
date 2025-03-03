@@ -18,7 +18,7 @@ const SlideList: React.FC<Props> = (props) => {
   }>({
     list: [],
     totalSize: 0,
-    pageSize: 1,
+    pageSize: 10,
     index: 0,
   })
 
@@ -43,7 +43,6 @@ const SlideList: React.FC<Props> = (props) => {
 
         list = state.list.concat(res.data.list)
 
-        console.log(list, '099999')
         return ({
           ...prevState,
           totalSize: res.data.total,
