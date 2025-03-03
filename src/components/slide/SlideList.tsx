@@ -10,6 +10,7 @@ interface Props {
 }
 
 const SlideList: React.FC<Props> = (props) => {
+  const [index, onChangeIndex] = useState(0)
   const [state, setState] = useState<{
     list: any[],
     totalSize: number,
@@ -55,8 +56,9 @@ const SlideList: React.FC<Props> = (props) => {
   const render = slideItemRender({ ...props.cbs })
   return (
     <SlideVerticalInfinite
-      index={0}
+      index={index}
       list={state.list}
+      onChangeIndex={onChangeIndex}
       active={props.active}
       virtualTotal={3}
       onLoadMore={loadMore}

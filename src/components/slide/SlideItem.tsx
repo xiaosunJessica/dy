@@ -1,13 +1,16 @@
 import React, {ReactNode} from 'react';
-import styles from  './SlideHorizontal.module.less'
+import './SlideHorizontal.module.less'
 interface Props {
   // props types
   children: ReactNode
+  dataIndex?: number
 }
 
-const SlideItem: React.FC<Props> = ({children}) => {
+const SlideItem: React.FC<Props> = ({children, dataIndex}) => {
   return (
-    <div className={styles['slide-item']} onClick={() => console.log('item')}>
+    <div
+      className={'slide-item'}
+      data-index={dataIndex}>
       {children}
     </div>
   );

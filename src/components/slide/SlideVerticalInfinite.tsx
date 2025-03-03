@@ -11,6 +11,7 @@ interface Props {
   children?: ReactNode,
   name?: string,
   index: number,
+  onChangeIndex: any,
   list: any[],
   virtualTotal: number,
   onLoadMore: () => void
@@ -44,9 +45,6 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
   })
 
 
-  const onChangeNext = () => {
-
-  }
   const handlePointerDown = useCallback((e: any) => {
     slideTouchStart(e, slideListEl.current, setState)
   }, [slideListEl])
@@ -55,6 +53,13 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
     slideTouchMove(e, slideListEl.current, state, setState)
   }, [state, slideListEl])
 
+  const canNext = (isNext: boolean) => {
+      return !(
+        (state.localIndex === 0 && !isNext) ||
+        (state.localIndex === props.list.length - 1 && isNext)
+      )
+    }
+
   const handlePointerUp = useCallback((e: any) => {
     // let isNext = state.move.y < 0
     // if (state.localIndex ===0 && !isNext && state.move.y > )
@@ -62,9 +67,41 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
       e,
       state,
       updateState:setState,
+      canNextCb: canNext,
+      nextCb: async (isNext: boolean) => {
+        let half = parseInt((props.virtualTotal / 2).toString()) // 虚拟列表的一半
+        if (props.list.length > props.virtualTotal) {
+          // 手指往上滑（即列表展示下一条内容）
+          if(isNext) {
+            if (state.localIndex > props.list.length - props.virtualTotal && state.localIndex > half) {
+              props.onLoadMore()
+            }
+
+            if (state.localIndex > half && state.localIndex < props.list.length - half) {
+              let addItemIndex: number = state.localIndex + half
+              let cls = `.${itemClassName}[data-index='${addItemIndex}']`
+              console.log(cls, '0000')
+              let res = slideListEl.current?.querySelector(cls)
+              if (!res) {
+                let child: any = await getInsEl(props.list[addItemIndex], addItemIndex)
+                slideListEl.current?.appendChild(child)
+              }
+
+              let index = slideListEl.current?.querySelector(`.${itemClassName}:first-child`)?.getAttribute('data-index')
+              appInsMap.get(Number(index)).unmount(index)
+
+              slideListEl.current?.querySelectorAll(`.${itemClassName}`).forEach((item) => {
+                _css(item, 'top', `${(state.localIndex - half) * state.wrapper.height}`)
+              })
+
+            }
+          }
+        }
+
+      }
     })
-    slideReset(e, slideListEl.current, state, setState, onChangeNext)
-  }, [state, slideListEl, onChangeNext])
+    slideReset(e, slideListEl.current, state, setState, props.onChangeIndex)
+  }, [state, slideListEl, props.onChangeIndex])
 
 
   const getInsEl = (item: any, index: number, play =false) => {
@@ -74,15 +111,16 @@ const SlideVerticalInfinite: React.FC<Props> = (props) => {
     if (process.env.NODE_ENV === 'production') {
 
     } else {
-      const App = () => <SlideItem data-index={index}>{slideVNode}</SlideItem>
+      const App = () => <SlideItem dataIndex={index}>{slideVNode}</SlideItem>
       // 使用 createRoot 渲染组件
       const root = ReactDOM.createRoot(parent);
       root.render(<App />);
 
       // 将卸载函数存入 appInsMap
       appInsMap.set(index, {
-        unmount: () => {
-          root.unmount(); // 卸载组件
+        unmount: (idx: number) => {
+          let el = document.querySelector(`.${itemClassName}[data-index='${idx}']`)
+         el?.remove()
         }
       });
 

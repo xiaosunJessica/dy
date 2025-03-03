@@ -11,7 +11,6 @@ interface Props {
 const ComponentName: React.FC<Props> = ({}) => {
   const [navIndex, setNavIndex] = useState<number>(0);
   const onChange = (val: number) => {
-    console.log(val, '00000')
     setNavIndex(val)
   }
   return (

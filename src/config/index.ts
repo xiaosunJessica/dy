@@ -14,7 +14,6 @@ const BASE_URL_MAP: { [key: string]: string } = {
 
 const env = process.env.NODE_ENV as string;
 
-console.log(env, 'envenvenvenv')
 export const IS_SUB_DOMAIN = ['GITEE_PAGES', 'GP_PAGES'].includes(env)
 export const IS_GITEE_PAGES = ['GITEE_PAGES'].includes(env)
 export const BASE_URL = BASE_URL_MAP[env]

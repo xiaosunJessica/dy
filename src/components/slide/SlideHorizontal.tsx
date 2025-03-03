@@ -39,7 +39,6 @@ const SlideHorizontal: React.FC<Props> = (props) => {
   }, [state, slideListEl])
 
   const handlePointerUp = useCallback((e: any) => {
-    console.log('handlePointerUp', state)
     slideTouchEnd({
       e,
       state,
